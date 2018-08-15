@@ -4,6 +4,7 @@ package main
 import (
 	"flag"
 	"fmt"
+	"os"
 
 	"github.com/timothyham/dicewords"
 )
@@ -17,6 +18,10 @@ var version = flag.Bool("version", false, "Print version")
 var help = flag.Bool("h", false, "Print help")
 
 func main() {
+	flag.Usage = func() {
+		fmt.Fprintf(os.Stderr, "Usage of %s:\n", os.Args[0])
+		printHelp()
+	}
 	flag.Parse()
 	if *help {
 		printHelp()
@@ -47,12 +52,12 @@ func main() {
 
 func printHelp() {
 	helpText := `
-dicewords - print eff dicewords
+dicewords - print EFF dicewords
 
 options:
 -version 
     Show version.
-- help 
+-help 
     Show this help.
 -p 
     Number of passphrases to generate. Default is 5.
