@@ -2,8 +2,8 @@
 package dicewords
 
 import (
-		"testing"
 	"strings"
+	"testing"
 )
 
 func TestGetWords(t *testing.T) {
@@ -27,6 +27,22 @@ func TestGetWords(t *testing.T) {
 	_, err = GetLargeWord(266666)
 	if err == nil {
 		t.Errorf("expected error, got none")
+	}
+
+	word, err = GetShortWord(6666)
+	if err != nil {
+		t.Errorf("unexpected error: %v", err)
+	}
+	if word != "zoom" {
+		t.Errorf("unexpected word %s", word)
+	}
+
+	word, err = GetShortUniqueWord(6666)
+	if err != nil {
+		t.Errorf("unexpected error: %v", err)
+	}
+	if word != "zucchini" {
+		t.Errorf("unexpected word %s", word)
 	}
 }
 

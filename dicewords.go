@@ -30,10 +30,10 @@ func init() {
 	EFFLargeWordList = EFFLargeWordList[1 : len(EFFLargeWordList)-1]
 
 	EFFShortWordList = strings.Split(EFFShortWordListRaw, "\n")
-	EFFShortWordList = EFFLargeWordList[1 : len(EFFShortWordList)-1]
+	EFFShortWordList = EFFShortWordList[1 : len(EFFShortWordList)-1]
 
-	EFFShortWordUniqPrefix = strings.Split(EFFShortWordListRaw, "\n")
-	EFFShortWordUniqPrefix = EFFShortWordUniqPrefix[1 : len(EFFShortWordList)-1]
+	EFFShortWordUniqPrefix = strings.Split(EFFShortWordUniqPrefixRaw, "\n")
+	EFFShortWordUniqPrefix = EFFShortWordUniqPrefix[1 : len(EFFShortWordUniqPrefix)-1]
 }
 
 // GetLargeWord needs 5 digit rolls
@@ -42,7 +42,6 @@ func GetLargeWord(rolls int) (string, error) {
 }
 
 func GetShortWord(rolls int) (string, error) {
-
 	return getWord(EFFShortWordList, rolls, 1111)
 }
 
