@@ -10,7 +10,8 @@ Dicewords is a command line utility that generates a secure passphrase from
 + unique short words - has shorter words that have unique 3 letter prefix. 
 Makes it easier for predictive entry on phones
 ### Shows passphrase strength (-v flag) 
-### Can specified the number of words to generate 
+### Can specify the number of words to generate 
+### Can specify the number of bits to generates
 
 ## To install
 Run `make install` from the directory
