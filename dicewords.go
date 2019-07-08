@@ -99,15 +99,10 @@ func getStats(phrase string, dict Dictionary) Stats {
 		numChars += len(word)
 	}
 
-	baseBits := 12.9
-	if dict == Short || dict == Short2 {
-		baseBits = 10.3
-	}
-
 	stats := Stats{}
 	stats.Length = len(phrase)
 	stats.NumChars = numChars
-	stats.NumBits = baseBits*float64(len(words)) + 0.4
+	stats.NumBits = EstimateBits(len(words), dict)
 
 	return stats
 }
@@ -163,4 +158,14 @@ func GetPhrase(numWords int, dict Dictionary) (string, Stats) {
 
 	res = strings.TrimSpace(res)
 	return res, getStats(res, dict)
+}
+
+func EstimateBits(numWords int, dict Dictionary) float64 {
+	baseBits := 12.9 // long words have 12.9 bits per word
+	if dict == Short || dict == Short2 {
+		baseBits = 10.3 // short words have 10.3 bits per word
+	}
+
+	numBits := baseBits*float64(numWords) + 0.4
+	return numBits
 }

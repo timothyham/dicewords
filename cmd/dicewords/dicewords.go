@@ -10,7 +10,8 @@ import (
 )
 
 var numPhrases = flag.Int("p", 5, "Number of phrases to generate")
-var numWords = flag.Int("w", 6, "Number of words per passphrase")
+var numWords = flag.Int("w", 0, "Number of words per passphrase")
+var numBits = flag.Int("b", 64, "Number of bits to generates")
 var short = flag.Bool("short", false, "Short words")
 var shortUniq = flag.Bool("short2", false, "Short words with unique beginning")
 var verbose = flag.Bool("v", false, "Print additional info")
@@ -40,6 +41,17 @@ func main() {
 		dict = dicewords.Short2
 	}
 
+	if *numWords == 0 {
+		// use numBits to determine numWords
+		for i := 1; i < 20; i++ {
+			estBits := dicewords.EstimateBits(i, dict)
+			if estBits >= float64(*numBits) {
+				*numWords = i
+				break
+			}
+		}
+	}
+
 	for i := 0; i < *numPhrases; i++ {
 		phrase, stats := dicewords.GetPhrase(*numWords, dict)
 		fmt.Printf("%s\n", phrase)
@@ -59,10 +71,12 @@ options:
     Show version.
 -help 
     Show this help.
+-b
+    Target number of bits. Default is 64 bits.
 -p 
     Number of passphrases to generate. Default is 5.
 -w
-    Number of words per passphrase. Default is 6
+    Number of words per passphrase. Overrides -b.
 -short
     Use eff short words list.
 -short2
