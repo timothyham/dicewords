@@ -22,7 +22,7 @@ func main() {
 	args = append(args, "install")
 	version := getGitVersion()
 	args = append(args, "-ldflags", "-X github.com/timothyham/dicewords.VersionString="+version)
-	args = append(args,"github.com/timothyham/dicewords/cmd/dicewords" )
+	args = append(args, "github.com/timothyham/dicewords/cmd/dicewords")
 
 	cmd = exec.Command("go", args...)
 	if out, err := cmd.CombinedOutput(); err != nil {

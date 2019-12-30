@@ -12,9 +12,10 @@ Makes it easier for predictive entry on phones
 ### Shows passphrase strength (-v flag) 
 ### Can specify the number of words to generate 
 ### Can specify the number of bits to generates
+### Now works on Windows! (removed dependency on make)
 
 ## To install
-Run `make install` from the directory
+Run `go run make.go` from the directory
 
 ## Usage help
 Type `dicewords -h` for help text
