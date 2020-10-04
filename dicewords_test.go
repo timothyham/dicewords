@@ -71,3 +71,23 @@ func TestGetPhrases(t *testing.T) {
 		t.Errorf("unexpected %v", stats.NumBits)
 	}
 }
+
+func TestMakeWords(t *testing.T) {
+	conf := MakeConfig()
+	w, _ := MakeWords(conf)
+	if len(w) != 5 {
+		t.Errorf("unexpected %v", len(w))
+	}
+	fields := strings.Split(w[0], " ")
+	if len(fields) != 5 {
+		t.Errorf("unexpected %v", len(fields))
+	}
+
+	conf.NumWords = 0
+	conf.NumBits = 120
+	w, _ = MakeWords(conf)
+	fields = strings.Split(w[0], " ")
+	if len(fields) != 10 {
+		t.Errorf("unexpected %v", len(fields))
+	}
+}

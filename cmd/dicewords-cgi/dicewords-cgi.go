@@ -1,4 +1,5 @@
-// Copyright 2018 Timothy Ham
+// Copyright 2020 Timothy Ham
+
 package main
 
 import (
@@ -47,13 +48,32 @@ func main() {
 
 	phrases, stats := dicewords.MakeWords(conf)
 
+	outWords := ""
+
 	for i, words := range phrases {
-		fmt.Printf("%s\n", words)
+		outWords += fmt.Sprintf("%s</br>", words)
 		if *verbose {
-			fmt.Printf("    %s\n", dicewords.PrintStats(stats[i]))
+			outWords += fmt.Sprintf("    %s</br>", dicewords.PrintStats(stats[i]))
 		}
 	}
+	fmt.Printf(template, outWords)
 }
+
+var template string = `Content-type: text/html
+
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Dicewords</title>
+</head>
+<body>
+Each line of random words is about 65 bits</br></br>
+%s
+</br>
+</body>
+</html>
+
+`
 
 func printHelp() {
 	helpText := `
@@ -66,6 +86,8 @@ options:
     Show this help.
 -b
     Target number of bits. Default is 64 bits.
+-cgi
+	Use html linebreak </br> instead of \n
 -p 
     Number of passphrases to generate. Default is 5.
 -w

@@ -25,6 +25,43 @@ const (
 	Short2
 )
 
+type Config struct {
+	NumWords   int
+	NumBits    int
+	NumPhrases int
+	Dict       Dictionary
+}
+
+func MakeConfig() Config {
+	return Config{NumWords: 5, NumPhrases: 5, Dict: Large}
+}
+
+func MakeWords(config Config) ([]string, []Stats) {
+	var out []string
+	var statOut []Stats
+
+	if config.NumWords == 0 {
+		if config.NumBits == 0 {
+			config.NumWords = 5
+		} else {
+			// use numBits to determine numWords
+			for i := 1; i < 20; i++ {
+				estBits := EstimateBits(i, config.Dict)
+				if estBits >= float64(config.NumBits) {
+					config.NumWords = i
+					break
+				}
+			}
+		}
+	}
+	for i := 0; i < config.NumPhrases; i++ {
+		phrase, stats := GetPhrase(config.NumWords, config.Dict)
+		out = append(out, phrase)
+		statOut = append(statOut, stats)
+	}
+	return out, statOut
+}
+
 func init() {
 	EFFLargeWordList = strings.Split(EFFLargeWordListRaw, "\n")
 	EFFLargeWordList = EFFLargeWordList[1 : len(EFFLargeWordList)-1]

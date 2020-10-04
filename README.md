@@ -20,3 +20,5 @@ Run `go run make.go` from the directory
 ## Usage help
 Type `dicewords -h` for help text
 
+## CGI 
+In the directory cmd/dicewords-cgi, builds a cgi compatible dicewords.cgi binary.
