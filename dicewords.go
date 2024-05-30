@@ -5,6 +5,7 @@ import (
 	"crypto/rand"
 	"errors"
 	"fmt"
+	"math"
 	"math/big"
 	"strings"
 )
@@ -30,6 +31,7 @@ type Config struct {
 	NumBits    int
 	NumPhrases int
 	Dict       Dictionary
+	AppleStyle bool
 }
 
 func MakeConfig() Config {
@@ -198,11 +200,88 @@ func GetPhrase(numWords int, dict Dictionary) (string, Stats) {
 }
 
 func EstimateBits(numWords int, dict Dictionary) float64 {
-	baseBits := 12.9 // long words have 12.9 bits per word
-	if dict == Short || dict == Short2 {
-		baseBits = 10.3 // short words have 10.3 bits per word
+	combos := 0
+	switch dict {
+	case Large:
+		combos = 7776
+	case Short:
+		combos = 1296
+	case Short2:
+		combos = 1296
 	}
+	return math.Log2(math.Pow(float64(combos), float64(numWords)))
+	/*
+		baseBits := 12.9 // long words have 12.9 bits per word
+		if dict == Short || dict == Short2 {
+			baseBits = 10.3 // short words have 10.3 bits per word
+		}
 
-	numBits := baseBits*float64(numWords) + 0.4
-	return numBits
+		numBits := baseBits*float64(numWords) + 0.4
+		return numBits
+	*/
+}
+
+func MakeApple(config Config) ([]string, []Stats) {
+	phrases := []string{}
+	stats := []Stats{}
+	for i := 0; i < config.NumPhrases; i++ {
+		phrases = append(phrases, makeApple())
+		stats = append(stats, Stats{
+			NumBits:  80,
+			Length:   20,
+			NumChars: 20,
+		})
+	}
+	return phrases, stats
+}
+
+func makeApple() string {
+	// ascii 'a' is 97, 'z' is 122
+	// 'A' is 65, '0' is 48
+	alpha := make([]byte, 18)
+	// 17 random chars
+	for i := 0; i < 18; i++ {
+		n, err := rand.Int(rand.Reader, big.NewInt(26))
+		if err != nil {
+			return ""
+		}
+		b := 97 + n.Int64()
+		alpha[i] = byte(b)
+	}
+	// 1 position to capitalize
+	cPosBigInt, err := rand.Int(rand.Reader, big.NewInt(17))
+	if err != nil {
+		return ""
+	}
+	cPos := cPosBigInt.Int64()
+	c := int(cPos)
+	alpha[c] = alpha[c] - 32
+
+	// 1 random digit
+	dBigInt, err := rand.Int(rand.Reader, big.NewInt(10))
+	if err != nil {
+		return ""
+	}
+	d64 := dBigInt.Int64()
+	var dPosBigInt *big.Int
+	for {
+		// find a different random position than capitalized
+		dPosBigInt, err = rand.Int(rand.Reader, big.NewInt(17))
+		if err != nil {
+			return ""
+		}
+		if dPosBigInt.Int64() != cPosBigInt.Int64() {
+			break
+		}
+	}
+	dPos := int(dPosBigInt.Int64())
+	alpha[dPos] = byte(int(d64) + 48) // convert into ascii number char
+
+	res := ""
+	res += string(alpha[0:6])
+	res += "-"
+	res += string(alpha[6:12])
+	res += "-"
+	res += string(alpha[12:])
+	return res
 }

@@ -12,6 +12,7 @@ import (
 var numPhrases = flag.Int("p", 5, "Number of phrases to generate")
 var numWords = flag.Int("w", 0, "Number of words per passphrase")
 var numBits = flag.Int("b", 64, "Number of bits to generates")
+var appleStyle = flag.Bool("apple", false, "Generate Apple style password")
 var short = flag.Bool("short", false, "Short words")
 var shortUniq = flag.Bool("short2", false, "Short words with unique beginning")
 var verbose = flag.Bool("v", false, "Print additional info")
@@ -44,8 +45,13 @@ func main() {
 	conf.NumWords = *numWords
 	conf.NumBits = *numBits
 	conf.NumPhrases = *numPhrases
-
-	phrases, stats := dicewords.MakeWords(conf)
+	var phrases []string
+	var stats []dicewords.Stats
+	if *appleStyle {
+		phrases, stats = dicewords.MakeApple(conf)
+	} else {
+		phrases, stats = dicewords.MakeWords(conf)
+	}
 
 	for i, words := range phrases {
 		fmt.Printf("%s\n", words)

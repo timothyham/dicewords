@@ -91,3 +91,15 @@ func TestMakeWords(t *testing.T) {
 		t.Errorf("unexpected %v", len(fields))
 	}
 }
+
+func TestMakeApple(t *testing.T) {
+	conf := Config{NumPhrases: 5}
+	phrases, stats := MakeApple(conf)
+	// fmt.Printf("phrases: %v; stats: %v\n", phrases, stats)
+	if len(phrases[0]) != 20 {
+		t.Errorf("invalid phrases: %v", phrases[0])
+	}
+	if stats[0].NumChars != 20 {
+		t.Errorf("invalid stats %v", stats[0])
+	}
+}
