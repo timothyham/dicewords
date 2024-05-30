@@ -62,12 +62,12 @@ func TestGetPhrases(t *testing.T) {
 	if stats.NumChars != 10 {
 		t.Errorf("expected 10, got %d", stats.Length)
 	}
-	if stats.NumBits != 26.2 {
+	if stats.NumBits != 25.8 {
 		t.Errorf("unexpected %v", stats.NumBits)
 	}
 
 	stats = getStats("hello there", Short)
-	if stats.NumBits != 21 {
+	if stats.NumBits != 20.7 {
 		t.Errorf("unexpected %v", stats.NumBits)
 	}
 }

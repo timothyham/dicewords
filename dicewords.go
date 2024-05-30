@@ -209,7 +209,9 @@ func EstimateBits(numWords int, dict Dictionary) float64 {
 	case Short2:
 		combos = 1296
 	}
-	return math.Log2(math.Pow(float64(combos), float64(numWords)))
+	bits := math.Log2(math.Pow(float64(combos), float64(numWords)))
+	return math.Round(bits*10) / 10
+
 	/*
 		baseBits := 12.9 // long words have 12.9 bits per word
 		if dict == Short || dict == Short2 {
