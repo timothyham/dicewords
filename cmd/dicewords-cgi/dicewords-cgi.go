@@ -56,7 +56,14 @@ func main() {
 			outWords += fmt.Sprintf("    %s</br>", dicewords.PrintStats(stats[i]))
 		}
 	}
-	fmt.Printf(template, outWords)
+
+	outApple := ""
+	applePhrases, _ := dicewords.MakeApple(dicewords.Config{NumPhrases: 5, AppleStyle: true})
+	for _, words := range applePhrases {
+		outApple += fmt.Sprintf("%s</br>", words)
+	}
+
+	fmt.Printf(template, outWords, outApple)
 }
 
 var template string = `Content-type: text/html
@@ -68,6 +75,9 @@ var template string = `Content-type: text/html
 </head>
 <body>
 Each line of random words is about 65 bits</br></br>
+%s
+</br></br>
+Apple style passwords with about 80 bits</br></br>
 %s
 </br>
 </body>
