@@ -13,6 +13,7 @@ var numPhrases = flag.Int("p", 5, "Number of phrases to generate")
 var numWords = flag.Int("w", 0, "Number of words per passphrase")
 var numBits = flag.Int("b", 64, "Number of bits to generates")
 var appleStyle = flag.Bool("apple", false, "Generate Apple style password")
+var appleStyle2 = flag.Bool("apple2", false, "Generate long Apple style password")
 var short = flag.Bool("short", false, "Short words")
 var shortUniq = flag.Bool("short2", false, "Short words with unique beginning")
 var verbose = flag.Bool("v", false, "Print additional info")
@@ -48,7 +49,9 @@ func main() {
 	var phrases []string
 	var stats []dicewords.Stats
 	if *appleStyle {
-		phrases, stats = dicewords.MakeApple(conf)
+		phrases, stats = dicewords.MakeApple(conf, false)
+	} else if *appleStyle2 {
+		phrases, stats = dicewords.MakeApple(conf, true)
 	} else {
 		phrases, stats = dicewords.MakeWords(conf)
 	}
@@ -80,6 +83,10 @@ options:
     Use eff short words list.
 -short2
     Use eff short unique 3 letter beginning words list.
+-apple
+	Make Apple style password
+-apple2
+	Make long version of Apple style password
 -v
     Show additional information.
 `

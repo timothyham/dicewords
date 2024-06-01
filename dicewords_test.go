@@ -94,12 +94,20 @@ func TestMakeWords(t *testing.T) {
 
 func TestMakeApple(t *testing.T) {
 	conf := Config{NumPhrases: 5}
-	phrases, stats := MakeApple(conf)
+	phrases, stats := MakeApple(conf, false)
 	// fmt.Printf("phrases: %v; stats: %v\n", phrases, stats)
 	if len(phrases[0]) != 20 {
 		t.Errorf("invalid phrases: %v", phrases[0])
 	}
 	if stats[0].NumChars != 20 {
+		t.Errorf("invalid stats %v", stats[0])
+	}
+
+	phrases, stats = MakeApple(conf, true)
+	if len(phrases[0]) != 27 {
+		t.Errorf("invalid phrases: %v", phrases[0])
+	}
+	if stats[0].NumChars != 27 {
 		t.Errorf("invalid stats %v", stats[0])
 	}
 }

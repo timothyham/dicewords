@@ -223,26 +223,36 @@ func EstimateBits(numWords int, dict Dictionary) float64 {
 	*/
 }
 
-func MakeApple(config Config) ([]string, []Stats) {
+func MakeApple(config Config, long bool) ([]string, []Stats) {
 	phrases := []string{}
 	stats := []Stats{}
 	for i := 0; i < config.NumPhrases; i++ {
-		phrases = append(phrases, makeApple())
-		stats = append(stats, Stats{
-			NumBits:  80,
+		phrases = append(phrases, makeApple(long))
+		stat := Stats{
+			NumBits:  87,
 			Length:   20,
 			NumChars: 20,
-		})
+		}
+		if long {
+			stat.NumBits = 116
+			stat.Length = 27
+			stat.NumChars = 27
+		}
+		stats = append(stats, stat)
 	}
 	return phrases, stats
 }
 
-func makeApple() string {
+func makeApple(long bool) string {
 	// ascii 'a' is 97, 'z' is 122
 	// 'A' is 65, '0' is 48
-	alpha := make([]byte, 18)
-	// 17 random chars
-	for i := 0; i < 18; i++ {
+	numChars := 18
+	if long {
+		numChars = 24
+	}
+	alpha := make([]byte, numChars)
+	// numChars number of random chars
+	for i := 0; i < numChars; i++ {
 		n, err := rand.Int(rand.Reader, big.NewInt(26))
 		if err != nil {
 			return ""
@@ -251,7 +261,7 @@ func makeApple() string {
 		alpha[i] = byte(b)
 	}
 	// 1 position to capitalize
-	cPosBigInt, err := rand.Int(rand.Reader, big.NewInt(17))
+	cPosBigInt, err := rand.Int(rand.Reader, big.NewInt(int64(numChars-1)))
 	if err != nil {
 		return ""
 	}
@@ -268,7 +278,7 @@ func makeApple() string {
 	var dPosBigInt *big.Int
 	for {
 		// find a different random position than capitalized
-		dPosBigInt, err = rand.Int(rand.Reader, big.NewInt(17))
+		dPosBigInt, err = rand.Int(rand.Reader, big.NewInt(int64(numChars-1)))
 		if err != nil {
 			return ""
 		}
@@ -284,6 +294,10 @@ func makeApple() string {
 	res += "-"
 	res += string(alpha[6:12])
 	res += "-"
-	res += string(alpha[12:])
+	res += string(alpha[12:18])
+	if long {
+		res += "-"
+		res += string(alpha[18:24])
+	}
 	return res
 }

@@ -6,6 +6,7 @@ import (
 	"flag"
 	"fmt"
 	"os"
+	"runtime/debug"
 
 	"github.com/timothyham/dicewords"
 )
@@ -20,6 +21,7 @@ var version = flag.Bool("version", false, "Print version")
 var help = flag.Bool("h", false, "Print help")
 
 func main() {
+	debug.SetMemoryLimit(5000000)
 	flag.Usage = func() {
 		fmt.Fprintf(os.Stderr, "Usage of %s:\n", os.Args[0])
 		printHelp()
@@ -58,7 +60,7 @@ func main() {
 	}
 
 	outApple := ""
-	applePhrases, _ := dicewords.MakeApple(dicewords.Config{NumPhrases: 5, AppleStyle: true})
+	applePhrases, _ := dicewords.MakeApple(dicewords.Config{NumPhrases: 5, AppleStyle: true}, false)
 	for _, words := range applePhrases {
 		outApple += fmt.Sprintf("%s</br>", words)
 	}
