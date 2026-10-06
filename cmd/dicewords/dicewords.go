@@ -16,6 +16,7 @@ var appleStyle = flag.Bool("apple", false, "Generate Apple style password")
 var appleStyle2 = flag.Bool("apple2", false, "Generate long Apple style password")
 var short = flag.Bool("short", false, "Short words")
 var shortUniq = flag.Bool("short2", false, "Short words with unique beginning")
+var totp = flag.Bool("totp", false, "Generate TOTP secret")
 var verbose = flag.Bool("v", false, "Print additional info")
 var version = flag.Bool("version", false, "Print version")
 var help = flag.Bool("h", false, "Print help")
@@ -33,6 +34,13 @@ func main() {
 
 	if *version {
 		printVersion()
+		return
+	}
+
+	if *totp {
+		for i := 0; i < 5; i++ {
+			fmt.Printf("%s\n", dicewords.MakeTotp())
+		}
 		return
 	}
 
@@ -87,6 +95,8 @@ options:
 	Make Apple style password
 -apple2
 	Make long version of Apple style password
+-totp
+	Make TOTP code secret
 -v
     Show additional information.
 `

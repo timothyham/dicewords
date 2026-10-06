@@ -3,8 +3,9 @@ package dicewords
 
 import (
 	"crypto/rand"
-	"errors"
+	"encoding/base32"
 	"fmt"
+	"log"
 	"math"
 	"math/big"
 	"strings"
@@ -90,7 +91,7 @@ func GetShortUniqueWord(rolls int) (string, error) {
 
 func getWord(list []string, rolls, smallest int) (string, error) {
 	if rolls < smallest {
-		return "", errors.New(fmt.Sprintf("Roll smaller than %d. Got %d\n", smallest, rolls))
+		return "", fmt.Errorf("Roll smaller than %d. Got %d\n", smallest, rolls)
 	}
 	// convert rolls into row index
 	idx := 0
@@ -100,7 +101,7 @@ func getWord(list []string, rolls, smallest int) (string, error) {
 	for {
 		digit := rolls % 10
 		if digit > 6 {
-			return "", errors.New(fmt.Sprintf("Bad roll input %d\n", rollsCopy))
+			return "", fmt.Errorf("Bad roll input %d\n", rollsCopy)
 		}
 		idx += factor * (digit - 1)
 		factor = factor * 6
@@ -112,7 +113,7 @@ func getWord(list []string, rolls, smallest int) (string, error) {
 	}
 
 	if idx < 0 || idx > len(list)-1 {
-		return "", errors.New(fmt.Sprintf("roll outside range %d\n", rollsCopy))
+		return "", fmt.Errorf("roll outside range %d\n", rollsCopy)
 	}
 	row := list[idx]
 	fields := strings.Split(row, "\t")
@@ -299,5 +300,21 @@ func makeApple(long bool) string {
 		res += "-"
 		res += string(alpha[18:24])
 	}
+	return res
+}
+
+func MakeTotp() string {
+	// 160 bits = 20 bytes (160 / 8 = 20)
+	const numBytes = 20
+	secretKey := make([]byte, numBytes)
+
+	_, err := rand.Read(secretKey)
+	if err != nil {
+		log.Fatalf("Failed to generate random bytes: %v", err)
+	}
+
+	unpaddedEnc := base32.StdEncoding.WithPadding(base32.NoPadding)
+	res := unpaddedEnc.EncodeToString(secretKey)
+
 	return res
 }
